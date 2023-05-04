@@ -1,0 +1,36 @@
+@model List<Student>
+@{
+    ViewBag.Title = "Student List";
+}
+
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th class="text-center">View</th>
+                <th class="text-center">Update</th>
+                <th class="text-center">Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var student in Model)
+            {
+                <tr>
+                    <td>@student.StudentId</td>
+                    <td>@student.Name</td>
+                    <td class="text-center">
+                        
+                        <a asp-controller="Student" asp-action="Get" asp-route-id="@student.StudentId" class="btn btn-primary">View</a>
+                    </td>
+                    <td class="text-center">
+                        <a asp-controller="Student" asp-action="Edit" asp-route-id="@student.StudentId" class="btn btn-primary">Edit</a></td>
+                    <td class="text-center">
+                    <a asp-controller="Student" asp-action="Delete" asp-route-id="@student.StudentId"
+                         class="btn btn-danger">Delete</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
