@@ -130,7 +130,6 @@ namespace StudentCrudApp.Controllers{
         // }
 
         [HttpGet]
-
         public ViewResult Create(){
             Student student = new Student
             {
@@ -155,7 +154,7 @@ namespace StudentCrudApp.Controllers{
             return View(student);
         }
 
-        [HttpPost]
+        // [HttpPost]
         // public IActionResult Create(Student student)
         // {
         //     try{
@@ -201,10 +200,13 @@ namespace StudentCrudApp.Controllers{
         public async Task<IActionResult> Edit(int? id){
             if(id == null || _context.students == null)
                 return NotFound();
+
             var student = await _context.students.FindAsync(id);
             
             if(student == null)
                 return NotFound();
+
+            student.AllGenders = Enum.GetValues(typeof(Gender)).Cast<Gender>().ToList();
             
             return View(student);
         }
@@ -255,11 +257,19 @@ namespace StudentCrudApp.Controllers{
         // }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Update(int id, 
+             [Bind("StudentId,Name,Email,Branch,Gender,Address")]Student student){
 
-        public async Task<IActionResult> Update(int id, Student student){
-            if(id != student.StudentId)
+            System.Console.WriteLine("id "+id);
+            System.Console.WriteLine("id: "+ student.StudentId);
+            System.Console.WriteLine("tyoe1 " + (id == student.StudentId));
+            System.Console.WriteLine("student " +  student.Name);
+
+
+            if(id != student.StudentId){
+                System.Console.WriteLine("Not found 1" );
                 return NotFound();
+            }
             
             if(ModelState.IsValid){
                 try{
@@ -267,19 +277,23 @@ namespace StudentCrudApp.Controllers{
                     await _context.SaveChangesAsync();
                 }
                 catch(DbUpdateConcurrencyException){
+                    System.Console.WriteLine("Exception" );
                     throw;
                 }
                 return RedirectToAction(nameof(GetAll));
             }
-            return View(student);
+            return View("Edit");
         }
 
 
-        [HttpPost]
+        // [HttpPost]
         // public IActionResult Update(int id, Student student){
         //     try{
+
+        //         System.Console.WriteLine("id ",id);
+        //         System.Console.WriteLine("student", student);  
                 
-        //         string query = "Update Student Set Name = @name, Branch = @branch, Gender = @gender, " +
+        //         string query = "Update Students Set Name = @name, Branch = @branch, Gender = @gender, " +
         //             "Email = @email, Address = @address Where StudentId = @id";
 
         //         using( var conn = new NpgsqlConnection(_connectionString)){
